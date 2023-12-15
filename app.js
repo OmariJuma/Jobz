@@ -1,5 +1,7 @@
 require('dotenv').config();
 require('express-async-errors');
+//accept json data in the body of the request 
+const bodyParser = require('body-parser');
 
 
 const express = require('express');
@@ -14,6 +16,7 @@ const jobsRouter = require('./routes/jobs');
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 
+app.use(bodyParser.json());
 app.get('/', (req, res) => {
   res.send('<h1>Jobs API</h1><a href="/api-docs">Documentation</a>');
 });
