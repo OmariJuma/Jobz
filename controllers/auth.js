@@ -9,17 +9,26 @@ const register = async (req, res) => {
   if (!name || !email || !password) {
     throw new BadRequestError("Please provide all values");
   }
-
-  await User.create({ name, email, password });
+  const user = await User.create({ name, email, password });
+  const token = user.createJWT();
 
   return res
     .status(StatusCodes.CREATED)
-    .json({ success: true, msg: "User created" });
+    .json({ success: true, user:{ name: user.name}, token});
 };
 
 //login functionality
 const login = async (req, res) => {
-  return res.send("<h1>Login to continue</h1>");
+  const {email, password} = req.body;
+  if(!email || !password){
+    throw new BadRequestError("Please provide email and password")
+  }
+
+  const user = await User.findOne({email});
+  if(!user){
+    return res.status(StatusCodes.NOT_FOUND).json({msg:"User not found"})
+  }
+  //invoke compare password
 };
 module.exports = {
   register,
