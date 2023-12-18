@@ -2,6 +2,7 @@ const { BadRequestError } = require("../errors");
 const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
 const bc = require("bcryptjs");
+const auth = require("../middleware/auth")
 
 //register functionality
 const register = async (req, res) => {
@@ -14,7 +15,7 @@ const register = async (req, res) => {
 
   return res
     .status(StatusCodes.CREATED)
-    .json({ success: true, user:{ name: user.name}, token});
+    .json({user:{ name: user.name}, token});
 };
 
 //login functionality
@@ -28,7 +29,11 @@ const login = async (req, res) => {
   if(!user){
     return res.status(StatusCodes.NOT_FOUND).json({msg:"User not found"})
   }
-  //invoke compare password
+  const token = user.createJWT();
+  return res
+  .status(StatusCodes.OK)
+  .json({ user: user.name, token});
+
 };
 module.exports = {
   register,
