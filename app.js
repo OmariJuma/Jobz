@@ -14,6 +14,7 @@ const jobsRouter = require('./routes/jobs');
 // error handler
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
+const authenticateUsers = require("./middleware/auth")
 
 app.use(bodyParser.json());
 app.get('/', (req, res) => {
@@ -22,7 +23,7 @@ app.get('/', (req, res) => {
 
 // routes
 app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/jobs', jobsRouter);
+app.use('/api/v1/jobs', authenticateUsers, jobsRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
