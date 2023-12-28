@@ -38,10 +38,27 @@ const updateJob = async (req, res) => {
 };
 
 const deleteJob = async (req, res) => {
-  res.send("hi");
+  const {
+    params: { id },
+    user: { userId },
+  } = req;
+  const deletedJob = await Job.findOneAndRemove({_id:id, createdBy:userId})
+  if(!deletedJob){
+    throw new NotFoundError(`Job with id of ${id} was not found`)
+  }
+  res.status(StatusCodes.OK).send()
+
 };
 const getJob = async (req, res) => {
-  res.send("hi");
+  const {
+    params: { id },
+    user: { userId },
+  } = req;
+  const myJob = await Job.findById({_id:id, createdBy: userId})
+  if(!myJob){
+    throw new NotFoundError(`Job with id of ${id} was not found`)
+  }
+  res.status(StatusCodes.OK).json(myJob)
 };
 
 module.exports = {
